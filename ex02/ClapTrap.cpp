@@ -1,4 +1,5 @@
 #include "ClapTrap.hpp"
+#include <climits>
 
 ClapTrap::ClapTrap(void) : name_("Default"), hit_points_(10), energy_points_(10), attack_damage_(0){
     std::cout << "ClapTrap default constructor called " << std::endl;
@@ -40,7 +41,10 @@ void ClapTrap::takeDamage(unsigned int amount){
         std::cout << "ClapTrap " << this->name_ << " has no hit points left to take damage!" << std::endl;
         return ;
     }
-    this->hit_points_ -= amount;
+    if (amount >= (unsigned int)this->hit_points_)
+        this->hit_points_ = 0;
+    else
+        this->hit_points_ -= amount;
     std::cout << "ClapTrap " << this->name_ << " takes " << amount << " points of damage!" << std::endl;
 }
 
@@ -50,6 +54,9 @@ void ClapTrap::beRepaired(unsigned int amount){
         return ;
     }
     this->energy_points_--;
-    this->hit_points_ += amount;
+    if (amount > (unsigned int)(INT_MAX - this->hit_points_))
+        this->hit_points_ = INT_MAX;
+    else
+        this->hit_points_ += amount;
     std::cout << "ClapTrap " << this->name_ << " is repaired for " << amount << " points!" << std::endl;
 }
